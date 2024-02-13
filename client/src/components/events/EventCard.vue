@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
+import { Button } from '../ui/button'
 import {
   Card,
   CardContent,
@@ -11,13 +12,15 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { getPriorityColor } from '@/lib/utils'
 
-const event = defineProps({
-  id: String,
-  name: String,
-  priority: Number,
-  type: String,
-  description: String
-})
+defineProps<{
+  event: {
+    id: string
+    name: string
+    priority: number
+    type: 'crosspromo' | 'liveops' | 'app' | 'ads'
+    description: string
+  }
+}>()
 </script>
 
 <template>
@@ -38,7 +41,9 @@ const event = defineProps({
     </CardContent>
 
     <CardFooter class="flex justify-between px-6 pb-6">
-      <p>View Event</p>
+      <Button>Edit</Button>
+
+      <Button>Delete</Button>
     </CardFooter>
   </Card>
 </template>

@@ -133,12 +133,7 @@ const handleTypeFilter = (type: string) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRow
-          v-for="event in visibleRows"
-          :key="event.id"
-          class="hover:bg-slate-200"
-          @click="navigateToEvent(event.id)"
-        >
+        <TableRow v-for="event in visibleRows" :key="event.id" class="hover:bg-slate-200">
           <TableCell class="font-medium">{{ toTitleCase(event.type) }}</TableCell>
           <TableCell class="font-medium">
             <Badge class="" :class="getPriorityColor(event.priority)">
