@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import EventCard from '@/components/cards/EventCard.vue'
+import EventCard from '@/components/events/EventCard.vue'
 
 // Correct the typo in the interface name
 interface Event {
