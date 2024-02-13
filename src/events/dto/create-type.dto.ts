@@ -13,6 +13,7 @@ export class CreateTypeDto extends AbstractEntity<Event> {
   @IsEnum(EventType)
   @IsNotEmpty()
   type: EventType;
+
   @IsString()
   @IsNotEmpty()
   description: string;

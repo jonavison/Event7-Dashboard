@@ -1,5 +1,5 @@
 <script lang="ts">
-import EventCard from '@/components/cards/EventCard.vue'
+import EventCard from '@/components/events/EventCard.vue'
 import axios from 'axios'
 import { computed, defineProps, reactive } from 'vue'
 
