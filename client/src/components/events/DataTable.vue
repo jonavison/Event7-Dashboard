@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import axios from 'axios'
 
-import { useRouter } from 'vue-router'
 import {
   Table,
   TableBody,
@@ -21,7 +21,6 @@ import { ArrowUpDown, PlusCircle } from 'lucide-vue-next'
 import AddEventForm from '../forms/AddEventForm.vue'
 
 import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog'
-
 export interface Event {
   id: string
   name: string
@@ -30,48 +29,23 @@ export interface Event {
   description: string
 }
 
-const events: Event[] = [
-  {
-    id: 'm5gr84i9',
-    name: 'PandomName',
-    priority: 0,
-    type: 'crosspromo',
-    description: 'description'
-  },
-  {
-    id: '3u1reuv4',
-    name: 'randomName',
-    priority: 5,
-    type: 'liveops',
-    description: 'description'
-  },
-  {
-    id: 'derv1ws0',
-    name: 'GandomName',
-    priority: 8,
-    type: 'app',
-    description: 'description'
-  },
-  {
-    id: '5kma53ae',
-    name: 'AandomName',
-    priority: 10,
-    type: 'ads',
-    description: 'description'
-  },
-  {
-    id: 'bhqecj4p',
-    name: 'ZandomName',
-    priority: 5,
-    type: 'ads',
-    description: 'Very long descirption we never know who goes crazy with explaining description'
-  }
-]
-const router = useRouter()
-const navigateToEvent = (id: string) => {
-  router.push(`/analytics/${id}`)
-}
+const events = ref<Event[]>([])
+const visibleRows = ref<Event[]>([])
+const loading = ref(true)
 const sortDirection = ref<'asc' | 'desc'>('asc')
+
+const getEvents = async () => {
+  try {
+    const response = await axios.get('https://localhost:3000/events')
+    events.value = response.data
+    visibleRows.value = response.data
+  } finally {
+    loading.value = false
+  }
+}
+
+getEvents()
+
 const handlePrioritySort = () => {
   sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc'
   visibleRows.value = [...visibleRows.value].sort((a, b) => {
@@ -83,15 +57,13 @@ const handlePrioritySort = () => {
   })
 }
 
-const visibleRows = ref(events)
 const handleTypeFilter = (type: string) => {
   if (type === '') {
-    visibleRows.value = events
-
+    visibleRows.value = events.value
     return
   }
 
-  visibleRows.value = events.filter((event) => event.type === type)
+  visibleRows.value = events.value.filter((event) => event.type === type)
 }
 </script>
 

@@ -1,59 +1,44 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, Repository } from 'typeorm';
-import { faker } from '@faker-js/faker';
+import { Injectable } from '@nestjs/common';
+import { CreateEventDto } from './dto/create-event.dto';
+import { UpdateEventDto } from './dto/update-event.dto';
 
 import { Event } from './entities/event.entity';
-import { Game } from 'src/games/entities/game.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { NotFoundException } from '@nestjs/common';
+
 @Injectable()
 export class EventsService {
   constructor(
     @InjectRepository(Event)
-    private eventsRepository: Repository<Event>,
-    private readonly entityManager: EntityManager,
+    private readonly eventsRepository: Repository<Event>,
   ) {}
-
-  // async findOne(id: number) {
-  //   return this.eventsRepository.findOne({
-  //     where: { id },
-  //     relations: { gameId: id },
-  //   });
-  // }
-
-  async getAll(): Promise<Event[]> {
-    return this.eventsRepository.find();
+  async create(createEventDto: CreateEventDto): Promise<Event> {
+    const newEvent = this.eventsRepository.create(createEventDto);
+    return this.eventsRepository.save(newEvent);
+  }
+  findAll() {
+    return `This action returns all events`;
   }
 
-  async getOne(id: number): Promise<Event | null> {
-    return this.eventsRepository.findOne({ where: { id } });
+  findOne(id: number) {
+    return `This action returns a #${id} event`;
   }
-
-  async create(event: Event): Promise<Event> {
-    return this.eventsRepository.save(event);
-  }
-
-  async change(event: Event): Promise<Event> {
-    return this.eventsRepository.save(event);
-  }
-
-  async delete(id: number): Promise<void> {
-    const eventToRemove = await this.eventsRepository.findOne({
+  async update(id: number, updateEventDto: UpdateEventDto): Promise<Event> {
+    const eventToUpdate = await this.eventsRepository.findOne({
       where: { id },
     });
-    await this.eventsRepository.remove(eventToRemove);
-  }
 
-  async seedEvents(number = 10, options?: Partial<Event>): Promise<void> {
-    const events = [];
-
-    for (let i = 0; i < number; i++) {
-      const event = new Event(options);
-      event.name = faker.commerce.productName();
-      event.description = faker.commerce.productDescription();
-      event.priority = faker.number.int({ min: 0, max: 10 });
-      events.push(event);
+    if (!eventToUpdate) {
+      throw new NotFoundException(`Event with ID ${id} not found`);
     }
 
-    await this.eventsRepository.save(events);
+    Object.assign(eventToUpdate, updateEventDto);
+
+    return this.eventsRepository.save(eventToUpdate);
+  }
+  remove(id: number) {
+    return `This action removes a #${id} event`;
   }
 }

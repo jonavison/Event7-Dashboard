@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { useForm } from 'vee-validate'
-import { toTypedSchema } from '@vee-validate/zod'
-import * as z from 'zod'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import axios from 'axios'
 import SpinnerIcon from '@/components/icons/IconSpinner.vue'
 import { Button } from '@/components/ui/button'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -17,74 +16,27 @@ import {
   SelectValue
 } from '@/components/ui/select'
 
-const eventFormSchema = toTypedSchema(
-  z.object({
-    name: z
-      .string()
-      .min(3, { message: 'Name must be at least 3 characters.' })
-      .max(50, { message: 'Name cannot exceed 50 characters.' }),
-
-    type: z
-      .enum(['crosspromo', 'liveops', 'app', 'ads'], {
-        required_error: 'Must be a valid type.'
-      })
-
-      .default('crosspromo'),
-    priority: z.preprocess(
-      (value) => (typeof value === 'string' ? parseInt(value, 10) : value),
-
-      z.number().int().positive().min(0).max(10)
-    ),
-
-    description: z
-      .string()
-      .min(1, { message: 'Description must be at least 1 character.' })
-      .max(255, { message: 'Description cannot exceed 255 characters.' })
-  })
-)
-
-const form = useForm({
-  validationSchema: eventFormSchema
-})
-const isPending = ref(false)
-
-const formData = ref({
+const event = ref({
   name: '',
-  type: 'crosspromo',
-  priority: 0,
+  priority: '',
+  type: '',
   description: ''
 })
 
-const onSubmit = form.handleSubmit(async (values) => {
+const isPending = ref(false)
+
+const onSubmit = async () => {
   isPending.value = true
-  console.log('Form submitted!', values)
-  setTimeout(() => {
-    isPending.value = false
-  }, 1000)
   try {
-    // Submit form data to your backend endpoint
-    const response = await fetch('http://localhost:3000/events', {
-      method: 'POST'
-    })
-
-    if (!response.ok) {
-      throw new Error('Failed to create event')
-    }
-
-    // Reset form and pending state after successful submission
-    formData.value = {
-      name: '',
-      type: 'crosspromo',
-      priority: 0,
-      description: ''
-    }
-    isPending.value = false
-    console.log('Event created successfully')
+    await axios.post('http://localhost:3000/events', event.value)
+    alert('Event created successfully!')
   } catch (error) {
     console.error('Error creating event:', error)
+    alert('Failed to create event. Please try again.')
+  } finally {
     isPending.value = false
   }
-})
+}
 </script>
 
 <template>
