@@ -57,18 +57,11 @@ const router = createRouter({
   routes
 })
 
-// Redirect to the Home pagerouter.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    // Check if the route requires authentication
-    if (!isAuthenticated()) {
-      // If user is not authenticated, redirect to sign-in page
-      next('/signin')
-    } else {
-      // If user is authenticated, proceed to the route
-      next()
-    }
+// Redirect to the Home page
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth && !isSignedIn()) {
+    next('/signin')
   } else {
-    // For routes that do not require authentication, proceed
     next()
   }
 })
