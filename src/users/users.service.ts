@@ -4,7 +4,12 @@ import { EntityManager, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
-import { generateResponse } from 'src/lib/response.utill';
+import { generateResponse } from 'src/lib/response';
+import {
+  BadRequestException,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common/exceptions';
 @Injectable()
 export class UsersService {
   // //verify password
@@ -29,17 +34,21 @@ export class UsersService {
   async signIn(username: string, password: string): Promise<any> {
     const user = await this.findOneByUsername(username);
 
+    if (!username || !password) {
+      throw generateResponse(false, 400, 'Missing mandatory parameters');
+    }
+
     if (!user) {
-      return generateResponse(false, 400, 'Missing mandatory parameters');
+      throw generateResponse(false, 401, 'Invalid credentials');
     }
 
     const passwordMatches = await bcrypt.compare(password, user.password);
 
     if (!passwordMatches) {
-      return generateResponse(false, 401, 'Invalid credentials');
+      throw generateResponse(false, 401, 'Invalid credentials');
     }
-    // If user and password match, return user data with success message
-    return generateResponse(true, 200, 'Success', 'you shall not pass!');
+    // If user and password match, throw user data with success message
+    throw generateResponse(true, 200, 'Success', 'you shall not pass!');
   }
   // TO ADD user.adsEnabled
   // if (user) {

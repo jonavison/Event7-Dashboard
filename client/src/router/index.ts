@@ -21,8 +21,7 @@ const routes = [
   },
   {
     path: '/dashboard',
-    component: DashboardView,
-    meta: { requiresAuth: true }
+    component: DashboardView
   },
   {
     path: '/events',
@@ -32,11 +31,6 @@ const routes = [
   {
     path: '/events/:id',
     component: EventView,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/games',
-    component: EventManagementView,
     meta: { requiresAuth: true }
   },
   {

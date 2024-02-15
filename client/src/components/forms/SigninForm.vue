@@ -18,32 +18,35 @@ const formData = ref({
 
 const onSubmit = async () => {
   try {
-    // You can add your custom validation here if needed
+    const response = await axios.post(
+      'http://localhost:3000/users/signin',
+      formData.value,
+      errorMessage
+    )
 
-    // Set isPending to true to show spinner
-    isPending.value = true
-
-    // Submit the form data using Axios POST request
-    const response = await axios.post('http://localhost:3000/users/signin', formData.value)
-
-    // If the request is successful, handle accordingly
-    console.log('Login successful:', response.data)
-
-    // Reset form state
-    formData.value.username = ''
-    formData.value.password = ''
-
-    // Clear any previous error message
-    errorMessage.value = ''
-    router.push('/')
-  } catch (error) {
-    // If there's an error, handle it
-    console.error('Login failed:', error)
-
-    // Display error message
-    errorMessage.value = 'An error occurred while logging in. Please try again.'
-  } finally {
-    // Whether the request is successful or not, set isPending back to false
+    if (response.data.success) {
+      // Handle successful response here
+      console.log('User signed in successfully:', response.data.data)
+      // Set isPending to false to hide spinner
+      isPending.value = false
+      // Clear form fields
+      formData.value = { username: '', password: '' }
+      // Navigate to the desired page
+      router.push('/')
+    } else {
+      // Set errorMessage if there is an error in the response
+      errorMessage.value = response.data.message
+    }
+  } catch (error: any) {
+    // Check if error response is available
+    if (error.response) {
+      // Set errorMessage to the message from the response
+      errorMessage.value = error.response.data.message
+    } else {
+      // If no response available, set a default error message
+      errorMessage.value = 'An error occurred, please try again'
+    }
+    // Clear the spinner
     isPending.value = false
   }
 }
