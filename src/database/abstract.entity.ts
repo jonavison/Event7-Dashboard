@@ -3,9 +3,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-// import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 export class AbstractEntity<T> {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @CreateDateColumn()
@@ -15,7 +15,7 @@ export class AbstractEntity<T> {
   updatedAt: Date;
 
   constructor(entity: Partial<T>) {
-    // this.id = uuidv4();
+    this.id = uuidv4();
     Object.assign(this, entity);
   }
 }

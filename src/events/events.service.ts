@@ -17,7 +17,6 @@ export class EventsService {
   ) {}
   async create(createEventDto: CreateEventDto) {
     const event = new Event(createEventDto);
-
     await this.entityManager.save(event);
   }
 

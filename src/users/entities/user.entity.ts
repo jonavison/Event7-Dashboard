@@ -7,7 +7,7 @@ import { AbstractEntity } from '../../database/abstract.entity';
 export class User extends AbstractEntity<User> {
   @IsString()
   @Length(3, 32)
-  @Column({ nullable: false })
+  @Column({ nullable: false, unique: true })
   username: string;
 
   @IsString()

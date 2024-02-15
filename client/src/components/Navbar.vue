@@ -7,22 +7,7 @@ import { siteConfig } from '@/config/site'
 import CommunityIcon from '@/components/icons/IconCommunity.vue'
 import CloseIcon from '@/components/icons/IconClose.vue'
 import MenuIcon from '@/components/icons/IconMenu.vue'
-
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger
-} from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-
-import { Button } from '../ui/button'
-
+import { Button } from './ui/button'
 export default defineComponent({
   components: {
     CommunityIcon,
@@ -50,16 +35,6 @@ export default defineComponent({
       isNavActive,
       toggleNav,
       Button,
-      Dialog,
-      DialogClose,
-      DialogContent,
-      DialogDescription,
-      DialogFooter,
-      DialogHeader,
-      DialogTitle,
-      DialogTrigger,
-      Label,
-      Input,
       icon
     }
   }
@@ -67,12 +42,12 @@ export default defineComponent({
 </script>
 
 <template>
-  <div id="navbar" class="">
+  <div id="navbar">
     <div class="lg:grid flex gap-2 lg:pt-20 lg:px-4 sm:px-8 px-4 py-4 xl:ml-6 ml-0">
       <div class="lg:ml-4 lg:mb-8 mr-8 lg:mr-0 px-2">
         <router-link class="flex items-center gap-2 text-2xl font-semibold" to="/">
           <CommunityIcon class="h-4 w-4" />
-          <h1 class="">{{ siteConfig.name }}</h1>
+          <div class="">{{ siteConfig.name }}</div>
         </router-link>
         <p class="text-base font-medium lg:block hidden">{{ siteConfig.description }}</p>
       </div>
