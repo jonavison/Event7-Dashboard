@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
 import { Button } from '../ui/button'
 import {
   Card,
@@ -13,31 +12,26 @@ import { Badge } from '@/components/ui/badge'
 import { getPriorityColor } from '@/lib/utils'
 
 defineProps<{
-  event: {
-    id: string
-    name: string
-    priority: number
-    type: 'crosspromo' | 'liveops' | 'app' | 'ads'
-    description: string
-  }
+  id: number
+  name: string
+  priority: number
+  description: string
+  type: string
 }>()
 </script>
 
 <template>
-  <Card :key="event.id" class="w-[350px] border">
+  <Card :key="id" class="w-[350px] border">
     <CardHeader class="relative">
-      <CardTitle class="text-xl text-primary">{{ event.name }}</CardTitle>
-      <Badge
-        class="absolute right-2 top-6 text-center"
-        :class="getPriorityColor(event.priority ?? 0)"
-      >
-        {{ event.priority }}
+      <CardTitle class="text-xl text-primary">{{ name }}</CardTitle>
+      <Badge class="absolute right-2 top-6 text-center" :class="getPriorityColor(priority ?? 0)">
+        {{ priority }}
       </Badge>
-      <CardDescription>{{ event.type }}</CardDescription>
+      <CardDescription>{{ type }}</CardDescription>
     </CardHeader>
 
     <CardContent>
-      <p>{{ event.description }}</p>
+      <p>{{ description }}</p>
     </CardContent>
 
     <CardFooter class="flex justify-between px-6 pb-6">

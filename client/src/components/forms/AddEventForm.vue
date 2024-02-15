@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import axios from 'axios'
 import SpinnerIcon from '@/components/icons/IconSpinner.vue'
 import { Button } from '@/components/ui/button'
@@ -15,20 +14,27 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
+import { useForm } from 'vee-validate'
+import { toTypedSchema } from '@vee-validate/zod'
+import * as z from 'zod'
 
-const event = ref({
-  name: '',
-  priority: '',
-  type: '',
-  description: ''
+const formSchema = toTypedSchema(
+  z.object({
+    name: z.string().min(2).max(50),
+    description: z.string().min(2).max(120),
+    priority: z.string(),
+    type: z.enum(['crosspromo', 'liveops', 'app', 'ads'])
+  })
+)
+
+const form = useForm({
+  validationSchema: formSchema
 })
-
 const isPending = ref(false)
-
-const onSubmit = async () => {
+const onSubmit = form.handleSubmit(async (values) => {
   isPending.value = true
   try {
-    await axios.post('http://localhost:3000/events', event.value)
+    await axios.post('http://localhost:3000/events', values)
     alert('Event created successfully!')
   } catch (error) {
     console.error('Error creating event:', error)
@@ -36,11 +42,11 @@ const onSubmit = async () => {
   } finally {
     isPending.value = false
   }
-}
+})
 </script>
 
 <template>
-  <form @submit="onSubmit" class="grid gap-5 p-2">
+  <form @submit.prevent="onSubmit" method="post" class="grid gap-5 p-2">
     <h2 class="text-xl font-medium mb-4">Create an Event</h2>
     <FormField v-slot="{ componentField }" name="name">
       <FormItem>
@@ -72,7 +78,7 @@ const onSubmit = async () => {
 
                   <SelectItem value="app"> App </SelectItem>
 
-                  <SelectItem value="ads"> Ads </SelectItem>
+                  <SelectItem value="ads "> Ads </SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
@@ -93,7 +99,7 @@ const onSubmit = async () => {
 
                 <SelectContent>
                   <SelectGroup>
-                    <SelectItem v-for="index in 10" :value="`${index}`" :key="index" as="number">
+                    <SelectItem v-for="index in 10" :value="index.toString()" :key="index">
                       {{ index }}
                     </SelectItem>
                   </SelectGroup>

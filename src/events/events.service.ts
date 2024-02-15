@@ -1,30 +1,40 @@
 import { Injectable } from '@nestjs/common';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
-
+import { EntityManager } from 'typeorm';
 import { Event } from './entities/event.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { EventType } from './entities/event.entity';
 
-import { NotFoundException } from '@nestjs/common';
-
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 @Injectable()
 export class EventsService {
   constructor(
     @InjectRepository(Event)
     private readonly eventsRepository: Repository<Event>,
+    private readonly entityManager: EntityManager,
   ) {}
-  async create(createEventDto: CreateEventDto): Promise<Event> {
-    const newEvent = this.eventsRepository.create(createEventDto);
-    return this.eventsRepository.save(newEvent);
-  }
-  findAll() {
-    return `This action returns all events`;
+  async create(createEventDto: CreateEventDto) {
+    const event = new Event(createEventDto);
+
+    await this.entityManager.save(event);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} event`;
+  async findAll(): Promise<Event[]> {
+    return this.eventsRepository.find();
   }
+
+  async findAllByType(type: EventType): Promise<Event[]> {
+    return this.eventsRepository.find({ where: { type } });
+  }
+
+  async findOneById(id: number) {
+    return this.eventsRepository.findOne({
+      where: { id },
+    });
+  }
+
   async update(id: number, updateEventDto: UpdateEventDto): Promise<Event> {
     const eventToUpdate = await this.eventsRepository.findOne({
       where: { id },
@@ -38,7 +48,19 @@ export class EventsService {
 
     return this.eventsRepository.save(eventToUpdate);
   }
-  remove(id: number) {
-    return `This action removes a #${id} event`;
+
+  //delete event
+  async remove(id: number): Promise<void> {
+    try {
+      const event = await this.findOneById(id);
+
+      if (!event) {
+        throw new NotFoundException('Event not found');
+      }
+
+      await this.eventsRepository.delete(id);
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 }

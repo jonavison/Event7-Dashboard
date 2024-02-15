@@ -1,34 +1,47 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+
+import { useRoute } from 'vue-router'
+
 import EventCard from '@/components/events/EventCard.vue'
 
-// Correct the typo in the interface name
+import axios from 'axios'
 interface Event {
-  id: string
+  id: number
   name: string
   priority: number
   type: 'crosspromo' | 'liveops' | 'app' | 'ads'
   description: string
 }
 
-// Use the correct interface name in ref
-const events = ref<Event[]>([])
+const event = ref<Event | null>(null)
+onMounted(async () => {
+  const route = useRoute()
 
-fetch('http://localhost:3000/events')
-  .then((response) => response.json())
-  .then((data: Event[]) => {
-    // Specify the type of data received
-    events.value = data
-  })
-  .catch((error) => {
-    console.error('Error fetching events:', error)
-  })
+  const eventId = route.params.id as string
+
+  try {
+    const response = await axios.get<Event>(`http://localhost:3000/events/${eventId}`)
+
+    event.value = response.data
+  } catch (error) {
+    console.error('Error fetching event:', error)
+
+    alert('Failed to fetch event. Please try again.')
+  }
+})
 </script>
-
 <template>
-  <!-- Check if events array has any items -->
-  <div v-if="events.length">
-    <EventCard v-for="event in events" :key="event.id" :event="event" />
+  <div v-if="event">
+    <!-- Render the EventCard component with the fetched event data -->
+    <EventCard
+      :id="event.id"
+      :name="event.name"
+      :priority="event.priority"
+      :description="event.description"
+      :type="event.type"
+    />
   </div>
+
   <div v-else>Loading event data...</div>
 </template>

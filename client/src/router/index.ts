@@ -4,7 +4,7 @@ import DashboardView from '@/views/DashboardView.vue'
 import EventManagementView from '@/views/EventManagementView.vue'
 import AnalyticsEventsPageVue from '@/views/AnalyticsEventsPage.vue'
 import AnalyticsView from '@/views/AnalyticsView.vue'
-
+import EventView from '@/views/EventView.vue'
 const routes = [
   {
     path: '/'
@@ -16,6 +16,10 @@ const routes = [
   {
     path: '/events',
     component: EventManagementView
+  },
+  {
+    path: '/events/:id',
+    component: EventView
   },
   {
     path: '/games',

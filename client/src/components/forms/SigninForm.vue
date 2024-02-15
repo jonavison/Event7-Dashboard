@@ -62,7 +62,7 @@ const errorMessage = ref('')
 </script>
 
 <template>
-  <!-- <div class="h-full w-full max-w-sm mx-auto">
+   <div class="h-full w-full max-w-sm mx-auto">
     <form
       @submit="onSubmit"
       class="grid gap-5 bg-slate-100 z-50 border-foreground/30 border-2 rounded-md p-8"
@@ -96,4 +96,6 @@ const errorMessage = ref('')
     </form>
   </div>
 </template>  -->
-<template></template>
+<template>
+  <div></div>
+</template>
