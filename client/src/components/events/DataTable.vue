@@ -43,6 +43,8 @@ const getEvents = async (type?: Event['type']) => {
     console.error('Error fetching events:', error)
   }
 }
+
+// handle the type of event
 const handleTypeFilter = (type: Event['type']) => {
   getEvents(type)
 }
@@ -56,7 +58,7 @@ onMounted(() => {
   <div class="w-full">
     <div class="flex justify-between py-2">
       <div class="grid grid-flow-col gap-2 max-w-2xl">
-        <Button variant="outline" size="sm" @click="handleTypeFilter('')"> View All </Button>
+        <!-- <Button variant="outline" size="sm" @click="handleTypeFilter('')"> View All </Button> -->
         <Button variant="outline" size="sm" @click="handleTypeFilter('crosspromo')">
           Crosspromo
         </Button>
@@ -96,7 +98,7 @@ onMounted(() => {
           </TableCell>
           <TableCell class="font-medium">{{ event.name }}</TableCell>
           <TableCell class="font-medium">{{ event.description }}</TableCell>
-          <!-- <TableCell class="text-right"> <DataTableDropDown :events="event" /></TableCell> -->
+          <TableCell class="text-right"> <DataTableDropDown :events="event" /></TableCell>
         </TableRow>
       </TableBody>
     </Table>

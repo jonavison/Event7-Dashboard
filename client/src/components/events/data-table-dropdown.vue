@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import axios from 'axios'
 import { ref } from 'vue'
-
 import { RouterLink } from 'vue-router'
 import { MoreHorizontal } from 'lucide-vue-next'
-
+import IconSpinner from '../icons/IconSpinner.vue'
 import {
   Dialog,
   DialogContent,
@@ -31,20 +30,26 @@ defineProps<{
 }>()
 
 const loading = ref(false)
-
+const success = ref(false)
 const handleDelete = async (event: { id: string }) => {
   loading.value = true // Set loading to true during delete operation
-  try {
-    await axios.delete(`http://localhost:3000/events/${event.id}`)
-    // Show success toast
-    // toast.success('Event deleted successfully')
-  } catch (error) {
-    console.error(error)
-    // Show error toast
-    // toast.error('Error deleting event')
-  } finally {
-    loading.value = false // Reset loading state after delete operation
-  }
+
+  // Display loading spinner for at least 3 seconds
+  setTimeout(async () => {
+    try {
+      // Perform delete operation after 3 seconds
+      await axios.delete(`http://localhost:3000/events/${event.id}`)
+      // Show success toast
+      // toast.success('Event deleted successfully')
+      success.value = true
+    } catch (error) {
+      console.error(error)
+      // Show error toast
+      // toast.error('Error deleting event')
+    } finally {
+      loading.value = false // Reset loading state after delete operation
+    }
+  }, 3000)
 }
 </script>
 
@@ -69,33 +74,23 @@ const handleDelete = async (event: { id: string }) => {
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          <DialogTrigger>
-            <span>Delete</span>
-            <!-- Wrap text with a span -->
-          </DialogTrigger>
+          <DialogTrigger> Delete </DialogTrigger>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
 
     <DialogContent class="max-w-xs flex-justify-center text-center">
       <DialogHeader class="mb-4 text-center flex">
-        <DialogTitle>Are you sure?</DialogTitle>
-        <DialogDescription>Changes cannot be undone...</DialogDescription>
+        <DialogTitle v-if="!success">Are you sure?</DialogTitle>
+        <DialogDescription v-if="!success">Changes cannot be undone...</DialogDescription>
+        <DialogTitle v-if="!loading && success">Event Deleted Successfully</DialogTitle>
       </DialogHeader>
 
-      <!-- Show loading spinner if loading is true -->
-      <template v-if="loading">
-        <div class="flex items-center justify-center h-12">
-          <IconSpinner class="animate-spin h-8 w-8 text-primary" />
-        </div>
-      </template>
-      <!-- Show delete button if not loading -->
-      <template v-else>
-        <Button variant="destructive" @click="handleDelete(events)">Delete</Button>
-      </template>
+      <Button v-if="!success" variant="destructive" @click="handleDelete(events)">
+        <span v-if="!loading">Delete</span>
+        <IconSpinner v-else class="animate-spin" aria-hidden="true"></IconSpinner>
+      </Button>
     </DialogContent>
-
-    <!-- Add close button and listen for the close event -->
-    <DialogClose as-child />
+    <DialogClose />
   </Dialog>
 </template>
