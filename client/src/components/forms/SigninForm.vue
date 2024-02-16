@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useForm } from 'vee-validate'
+import { toTypedSchema } from '@vee-validate/zod'
+import * as z from 'zod'
+
 import SpinnerIcon from '@/components/icons/IconSpinner.vue'
 import { Button } from '@/components/ui/button'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -8,48 +12,38 @@ import axios from 'axios'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+
 const isPending = ref(false)
+
 const errorMessage = ref('')
 
-const formData = ref({
-  username: '',
-  password: ''
+const userSchema = toTypedSchema(
+  z.object({
+    username: z.string().min(2).max(50),
+    password: z.string().min(2).max(50) // Add password field to the schema
+  })
+)
+
+const form = useForm({
+  validationSchema: userSchema
 })
 
-const onSubmit = async () => {
+const onSubmit = form.handleSubmit(async (values) => {
   try {
-    const response = await axios.post(
-      'http://localhost:3000/users/signin',
-      formData.value,
-      errorMessage
-    )
-
+    isPending.value = true
+    errorMessage.value = ''
+    const response = await axios.post('http://localhost:3000/users/signin', values)
     if (response.data.success) {
-      // Handle successful response here
-      console.log('User signed in successfully:', response.data.data)
-      // Set isPending to false to hide spinner
-      isPending.value = false
-      // Clear form fields
-      formData.value = { username: '', password: '' }
-      // Navigate to the desired page
-      router.push('/')
+      router.push('/events')
     } else {
-      // Set errorMessage if there is an error in the response
       errorMessage.value = response.data.message
     }
-  } catch (error: any) {
-    // Check if error response is available
-    if (error.response) {
-      // Set errorMessage to the message from the response
-      errorMessage.value = error.response.data.message
-    } else {
-      // If no response available, set a default error message
-      errorMessage.value = 'An error occurred, please try again'
-    }
-    // Clear the spinner
+  } catch (error) {
+    errorMessage.value = 'An error occurred while signing in. Please try again.'
+  } finally {
     isPending.value = false
   }
-}
+})
 </script>
 
 <template>

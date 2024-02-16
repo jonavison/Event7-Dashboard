@@ -14,7 +14,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         password: configService.getOrThrow('MYSQL_PASSWORD'),
         autoLoadEntities: true,
         synchronize: configService.getOrThrow('MYSQL_SYNCHRONIZE'),
-        migrations: [__dirname + './src/migrations/**/*{.ts,.js}'],
+        migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
         seeds: [__dirname + '/seeds/**/*{.ts,.js}'],
       }),
       inject: [ConfigService],

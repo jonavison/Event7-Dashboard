@@ -50,6 +50,8 @@ pnpm setup
 # Update the variables.
 
 Get your Mysql server runnning and change .env accordinngly
+Open Up Docker Desktop and run
+docker-compose up
 
 # Start the development server
 

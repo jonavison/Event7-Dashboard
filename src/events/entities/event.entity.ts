@@ -10,6 +10,10 @@ export enum EventType {
   APP = 'app',
   ADS = 'ads',
 }
+export enum GameName {
+  TALKING_TOM = 'talking_tom',
+  MYTHIIC_LEGEND = 'mythic_legend',
+}
 
 @Entity()
 export class Event extends AbstractEntity<Event> {
@@ -32,4 +36,9 @@ export class Event extends AbstractEntity<Event> {
   @IsEnum(EventType)
   @ApiProperty({ enum: EventType })
   type: EventType;
+
+  @Column()
+  @IsEnum(GameName)
+  @ApiProperty({ enum: GameName })
+  game: GameName;
 }

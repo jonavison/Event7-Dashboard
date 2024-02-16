@@ -32,24 +32,26 @@ export class UsersService {
     private readonly entityManager: EntityManager,
   ) {}
   async signIn(username: string, password: string): Promise<any> {
-    const user = await this.findOneByUsername(username);
-
     if (!username || !password) {
       throw generateResponse(false, 400, 'Missing mandatory parameters');
-    }
+    } else {
+      const user = await this.findOneByUsername(username);
 
-    if (!user) {
-      throw generateResponse(false, 401, 'Invalid credentials');
-    }
+      if (!user) {
+        throw generateResponse(false, 401, 'Invalid credentials');
+      } else {
+        const passwordMatches = await bcrypt.compare(password, user.password);
 
-    const passwordMatches = await bcrypt.compare(password, user.password);
-
-    if (!passwordMatches) {
-      throw generateResponse(false, 401, 'Invalid credentials');
+        if (!passwordMatches) {
+          throw generateResponse(false, 401, 'Invalid credentials');
+        } else {
+          throw generateResponse(true, 200, 'Success', 'you shall not pass!');
+        }
+      }
     }
-    // If user and password match, throw user data with success message
-    throw generateResponse(true, 200, 'Success', 'you shall not pass!');
   }
+  // If user and password match, throw user data with success message
+
   // TO ADD user.adsEnabled
   // if (user) {
   //   return generateResponse(true, 200, 'Success', { ads: 'sure, why not!' });

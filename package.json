@@ -21,9 +21,10 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "typeorm": "ts-node ./node_modules/typeorm/cli",
+    "schema:sync": "npm run typeorm schema:sync -- -d ./src/database/data-source.ts",
     "schema:drop": "npm run typeorm schema:drop -- -d ./src/database/data-source.ts",
-    "migrations:create": "npm run typeorm migration:create ./src/migrations/$npm_config_name",
-    "migrations:generate": "npm run typeorm  migration:generate -- -d ./src/database/data-source.ts",
+    "migrations:create": "typeorm migration:create ./src/migrations/schema-update",
+    "migrations:generate": "npx typeorm-ts-node-commonjs migration:generate ./src/migrations/schema-update -d ./src/database/data-source.ts",
     "migrations:run": "npm run typeorm migration:run -- -d ./src/database/data-source.ts",
     "migrations:revert": "npm run typeorm migration:revert -- -d ./src/database/data-ource.ts"
   },
@@ -49,6 +50,7 @@
     "reflect-metadata": "^0.1.14",
     "rxjs": "^7.8.1",
     "typeorm": "^0.3.20",
+    "typeorm-extension": "^3.5.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
