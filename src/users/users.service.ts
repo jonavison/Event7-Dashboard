@@ -12,19 +12,33 @@ import {
 } from '@nestjs/common/exceptions';
 @Injectable()
 export class UsersService {
-  // //verify password
-  // async verifyPassword(password: string, password1: string) {
-  //   try {
-  //     const passwordMatches = await bcrypt.compare(password, password1);
+  //verify password
+  async verifyPassword(password: string, password1: string) {
+    try {
+      const passwordMatches = await bcrypt.compare(password, password1);
 
-  //     if (passwordMatches) {
-  //       return true;
-  //     }
-  //     return false;
-  //   } catch (error) {
-  //     throw new ForbiddenException('Not valid Password', error.message);
-  //   }
-  // }
+      if (passwordMatches) {
+        return true;
+      }
+      return false;
+    } catch (error) {
+      throw new ForbiddenException('Not valid Password', error.message);
+    }
+  }
+
+  //encrypt password
+  async hashPassword(password: string) {
+    const saltRounds = 10;
+
+    const hashedPassword: string = await new Promise((resolve, reject) => {
+      bcrypt.hash(password, saltRounds, function (err, hash) {
+        if (err) reject(err);
+        resolve(hash);
+      });
+    });
+
+    return hashedPassword;
+  }
 
   constructor(
     @InjectRepository(User)
@@ -33,23 +47,20 @@ export class UsersService {
   ) {}
   async signIn(username: string, password: string): Promise<any> {
     if (!username || !password) {
-      throw generateResponse(false, 400, 'Missing mandatory parameters');
-    } else {
-      const user = await this.findOneByUsername(username);
-
-      if (!user) {
-        throw generateResponse(false, 401, 'Invalid credentials');
-      } else {
-        const passwordMatches = await bcrypt.compare(password, user.password);
-
-        if (!passwordMatches) {
-          throw generateResponse(false, 401, 'Invalid credentials');
-        } else {
-          throw generateResponse(true, 200, 'Success', 'you shall not pass!');
-        }
-      }
+      throw new BadRequestException('Missing mandatory parameters');
     }
+
+    const user = await this.findOneByUsername(username);
+    const passwordMatches =
+      user && (await bcrypt.compare(password, user.password));
+
+    if (!passwordMatches) {
+      throw new ForbiddenException('Invalid credentials');
+    }
+
+    return { success: true };
   }
+
   // If user and password match, throw user data with success message
 
   // TO ADD user.adsEnabled

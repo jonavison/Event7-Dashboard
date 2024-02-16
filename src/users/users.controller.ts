@@ -5,13 +5,12 @@ import {
   Body,
   Param,
   Delete,
-  UseGuards,
   NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { SigninUserDto } from './dto/signin-user.dto';
-import { AuthGuard } from '@nestjs/passport';
 
 @Controller('users')
 export class UsersController {
@@ -26,7 +25,6 @@ export class UsersController {
     return user;
   }
   @Post('signin')
-  // @UseGuards(AuthGuard())
   async signIn(@Body() signInDto: SigninUserDto) {
     const user = await this.usersService.signIn(
       signInDto.username,
