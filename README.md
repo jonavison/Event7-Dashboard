@@ -40,28 +40,35 @@ My biggest challenge was to seed data into the database.. I wanted to make a lit
 
 git clone https://github.com/your-username/event7-dashboard.git
 
-I assume that you have Mysql server, and is already set up quite warmly..
-we use pnpm / replace pnpm by "npm run" if prefered
+I assume that you have Mysql server, docker Desktop and is already set up warmly..
+The .env file will not be ignored in this project, change the environment variables coressponding to your MysQL server !important
 
-# Install dependencies using npm
+# Install dependencies
 
-pnpm setup
+pnpm install
+cd client
+pnpm install
+cd ..
 
-# Update the variables.
+# Start Docker
 
-Get your Mysql server runnning and change .env accordinngly
-Open Up Docker Desktop and run
+Open Docker Desktop
+and run the following cmd :
 docker-compose up
 
-# Start the development server
+# Sync and Migrate
+
+Open new terminal :
+pnpm schema:sync  
+pnpm mihrations:run
+
+# Start App
 
 pnpm start:dev
-
-# Push the database schema
-
-pnpm migrations:run
-pnpm dev
+cd client
+pnpm run dev
 
 Et voila !
 
-I must say I took really a long time to figure out how Nest Js works, they have good docs but stil time flows and you have to write and test. Nevertheless a lot have been learn, so Thank You :}
+Navigate to the /events page to create and view events!
+Navigate to the /signin page to try signing in! // Http responses are not functionning correctly I'm not correctly passing erros!
