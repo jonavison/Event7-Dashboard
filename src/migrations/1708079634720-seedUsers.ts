@@ -5,15 +5,15 @@ export class SeedUsers1708081112223 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     try {
       await queryRunner.manager.insert(User, {
-        username: 'john',
-        password: 'password1',
+        username: 'fun7user',
+        password: 'fun7pass',
       });
       await queryRunner.manager.insert(User, {
-        username: 'jane',
+        username: 'tes1',
         password: 'password2',
       });
       await queryRunner.manager.insert(User, {
-        username: 'bob',
+        username: 'test2',
         password: 'password3',
       });
     } catch (error) {

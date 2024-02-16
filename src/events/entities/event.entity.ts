@@ -17,9 +17,6 @@ export enum GameName {
 
 @Entity()
 export class Event extends AbstractEntity<Event> {
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @Column()
   @IsString()
   name: string;

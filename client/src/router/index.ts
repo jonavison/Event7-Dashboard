@@ -3,7 +3,6 @@ import DashboardLayout from '@/components/layouts/DashboardLayout.vue'
 import DefaultLayout from '@/components/layouts/DefaultLayout.vue'
 import DashboardView from '@/views/DashboardView.vue'
 import EventManagementView from '@/views/EventManagementView.vue'
-import AnalyticsEventsPageVue from '@/views/AnalyticsEventsPage.vue'
 import AnalyticsView from '@/views/AnalyticsView.vue'
 import EventView from '@/views/EventView.vue'
 import HomePage from '@/views/HomePage.vue'
@@ -24,25 +23,23 @@ const routes = [
     component: DashboardView
   },
   {
+    path: '/:game/events',
+    component: EventManagementView,
+    meta: { layout: DashboardLayout }
+  },
+  {
     path: '/events',
     component: EventManagementView,
     meta: { layout: DashboardLayout }
   },
   {
     path: '/events/:id',
-    component: EventView,
-    meta: { requiresAuth: true }
+    component: EventView
   },
   {
     path: '/analytics',
     component: AnalyticsView,
-    meta: { requiresAuth: true },
-    children: [
-      {
-        path: '/analytics/:id',
-        component: AnalyticsEventsPageVue
-      }
-    ]
+    meta: { requiresAuth: true }
   }
 ]
 

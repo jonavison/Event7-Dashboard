@@ -3,11 +3,11 @@ import { ref, onMounted } from 'vue'
 
 import { useRoute } from 'vue-router'
 
-import EventCard from '@/components/events/EventCard.vue'
+import EventCard from '@/components/cards/EventCard.vue'
 
 import axios from 'axios'
 interface Event {
-  id: number
+  id: string
   name: string
   priority: number
   type: 'crosspromo' | 'liveops' | 'app' | 'ads'
@@ -18,7 +18,7 @@ const event = ref<Event | null>(null)
 onMounted(async () => {
   const route = useRoute()
 
-  const eventId = route.params.id as string
+  const eventId = route.params.id
 
   try {
     const response = await axios.get<Event>(`http://localhost:3000/events/${eventId}`)

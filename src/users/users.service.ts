@@ -85,13 +85,13 @@ export class UsersService {
     return this.usersRepository.find();
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     return this.usersRepository.findOne({
       where: { id },
     });
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     await this.usersRepository.delete(id);
   }
 }

@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge'
 import { getPriorityColor } from '@/lib/utils'
 
 defineProps<{
-  id: number
+  id: string
   name: string
   priority: number
   description: string

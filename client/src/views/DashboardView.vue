@@ -1,48 +1,16 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import EventCard from '@/components/events/EventCard.vue'
-import axios from 'axios'
-// interface Event {
-//   id: string
-//   name: string
-//   priority: number
-//   type: 'crosspromo' | 'liveops' | 'app' | 'ads'
-//   description: string
-// }
+import GameCard from '@/components/cards/GameCard.vue'
 
-// // Use the correct interface name in ref
-// const events = ref<Event[]>([])
-// const findOneById = async (id: string) => {
-//   try {
-//     const response = await axios.get<Event>(`http://localhost:3000/events/${id}`)
-//     // Assuming the response data is the event object
-//     const event = response.data
-//     // Update the events array with the retrieved event
-//     events.value.push(event)
-//   } catch (error) {
-//     console.error('Error fetching event by ID:', error)
-//   }
-// }
-// findOneById('your-event-id')
+const games = ref<{ name: string; slug: string }[]>([
+  { name: 'TALKING_TOM', slug: 'talking_tom' },
+  { name: 'MYTHIC_LEGEND', slug: 'mythic_legend' }
+])
 </script>
-
 <template>
-  <div class="grid gap-10 z-10">
-    <!-- <div class="text-xl rounded-lg font-medium text-primary p-4 bg-background">Recently Added</div>
-    <div class="grid grid-flow-col">
-      <EventCard v-for="event in events" :key="event.id" :event="event" />
-    </div>
-    <div class="text-xl rounded-lg font-medium p-4 text-primary bg-background">
-      High priority Events
-    </div> -->
-    <!-- Render the Events data here -->
+  <div class="grid grid-flow-col gap-4 mx-auto max-w-5xl">
+    <router-link v-for="game in games" :key="game.slug" :to="`/${game.slug}/events`">
+      <GameCard :name="game.name" />
+    </router-link>
   </div>
 </template>
-
-<style scoped>
-h1 {
-  font-size: 24px;
-
-  margin-bottom: 10px;
-}
-</style>

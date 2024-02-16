@@ -21,6 +21,7 @@ import { PlusCircle } from 'lucide-vue-next'
 import AddEventForm from '../forms/AddEventForm.vue'
 
 import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog'
+
 interface Event {
   id: string
   name: string

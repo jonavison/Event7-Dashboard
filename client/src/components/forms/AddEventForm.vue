@@ -23,7 +23,8 @@ const formSchema = toTypedSchema(
     name: z.string().min(2).max(50),
     description: z.string().min(2).max(120),
     priority: z.string(),
-    type: z.enum(['crosspromo', 'liveops', 'app', 'ads'])
+    type: z.enum(['crosspromo', 'liveops', 'app', 'ads']),
+    game: z.enum(['talking_tom', 'mythic_legend'])
   })
 )
 
@@ -48,6 +49,28 @@ const onSubmit = form.handleSubmit(async (values) => {
 <template>
   <form @submit.prevent="onSubmit" method="post" class="grid gap-5 p-2">
     <h2 class="text-xl font-medium mb-4">Create an Event</h2>
+    <FormField v-slot="{ componentField }" name="game">
+      <FormItem>
+        <FormLabel>Game</FormLabel>
+
+        <FormControl>
+          <Select v-bind="componentField">
+            <SelectTrigger>
+              <SelectValue placeholder="Game" />
+            </SelectTrigger>
+
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="talking_tom"> Talking Tom </SelectItem>
+
+                <SelectItem value="mythic_legend"> Mythic Legend </SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    </FormField>
     <FormField v-slot="{ componentField }" name="name">
       <FormItem>
         <FormLabel>Name</FormLabel>
@@ -78,7 +101,7 @@ const onSubmit = form.handleSubmit(async (values) => {
 
                   <SelectItem value="app"> App </SelectItem>
 
-                  <SelectItem value="ads "> Ads </SelectItem>
+                  <SelectItem value="ads"> Ads </SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
@@ -86,6 +109,7 @@ const onSubmit = form.handleSubmit(async (values) => {
           <FormMessage />
         </FormItem>
       </FormField>
+
       <div class="flex justify-end">
         <FormField v-slot="{ componentField }" name="priority">
           <FormItem>
