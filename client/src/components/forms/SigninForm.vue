@@ -32,7 +32,10 @@ const onSubmit = form.handleSubmit(async (values) => {
   try {
     isPending.value = true
     errorMessage.value = ''
-    const response = await axios.post('http://localhost:3000/auth/signin', values)
+    const config = {
+      params: values
+    }
+    const response = await axios.get('http://localhost:3000/auth/signin', config)
     if (response.data.success) {
       router.push('/events')
     } else {

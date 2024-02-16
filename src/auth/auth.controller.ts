@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Res, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Body, Res, HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 
@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('signin')
+  @Get('signin')
   async signin(@Body() user: any, @Res() res: Response) {
     try {
       // Check if mandatory parameters are present
@@ -21,16 +21,26 @@ export class AuthController {
         user.username,
         user.password,
       );
+
       if (!isValid) {
         return res.status(HttpStatus.UNAUTHORIZED).json({
           error: 'Invalid credentials',
         });
       }
 
+      // Check if ads type is enabled or disabled
+      const adsType = await this.authService.checkAdsType();
+
       // If authentication is successful, return a success response
-      return res.status(HttpStatus.OK).json({
-        message: 'Sure, why not!',
-      });
+      if (adsType === 'enabled') {
+        return res.status(HttpStatus.OK).json({
+          message: 'Sure, why not!',
+        });
+      } else {
+        return res.status(HttpStatus.OK).json({
+          message: 'You shall not pass!',
+        });
+      }
     } catch (error) {
       // If any server error occurs, return a 500 response
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({

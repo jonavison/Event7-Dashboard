@@ -71,4 +71,4 @@ pnpm run dev
 Et voila !
 
 Navigate to the /events page to create and view events!
-Navigate to the /signin page to try signing in! // Http responses are not functionning correctly I'm not correctly passing erros!
+Get Method http://localhost:3000/auth/signin for basic auth.

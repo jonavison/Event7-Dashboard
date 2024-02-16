@@ -1,5 +1,4 @@
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
 import { UnauthorizedException } from '@nestjs/common';
 
@@ -32,5 +31,11 @@ export class AuthService {
     }
 
     return false; // User is not valid
+  }
+
+  async checkAdsType(): Promise<'enabled' | 'disabled'> {
+    // Replace this with your actual logic to check if ads type is enabled or disabled
+    const adsType = 'enabled'; // or 'disabled'
+    return adsType;
   }
 }
